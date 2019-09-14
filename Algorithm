@@ -1,0 +1,44 @@
+Turn Around Time : "Time difference between completion time and arrival time" (or)
+                    "sum of waiting time and burst time".
+                    
+Waiting time : Time Difference between turn around time and burst time.  
+
+#Algorithm
+
+step 1 : create an array process[] and burst_time[]
+step 2 : create an array burst_remaining_time[] . initially burst_reamaining_time[] = burst_time[]
+step 3 : Initially t = 0 and array waiting_time[] = {0}
+step 4 : keep traversing utill all process should be completed
+         step 4.1 : IF burst_remaining_time[] > quntum then 
+                        t = t + quntum
+                        burst_remaining_time[] = burst_remaining_time - quntum
+         step 4.2 : ELSE
+                      t = t + burst_remaining_time[]
+                      waiting_time[] = t - burst_time[]
+                      burst_remaining_time[] = 0
+                      
+(Quntum <- which means cpu time)  
+(Burst time <- It is time to complete a process)
+
+Example :-
+
+Quntum = 3   <-- CPU TIME
+
+Process_name    Burst_time
+
+A            =    9
+B            =    7
+c            =    5
+
+
+process :
+
+ ______________________________________________________________________
+|       |       |        |        |        |        |        |        |
+|   A   |   B   |    C   |   A    |    B   |    C   |   A    |   B    |    <----- PROCESS
+ ----------------------------------------------------------------------   
+|       |       |        |        |        |        |        |        |
+|   3   |   6   |    9   |   12   |   15   |   17   |   20   |   21   |    <----- PROCESS TIME
+ ---------------------------------------------------------------------
+ 
+ 
