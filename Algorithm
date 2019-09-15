@@ -1,12 +1,7 @@
-Turn Around Time : "Time difference between completion time and arrival time" (or)
-                    "sum of waiting time and burst time".
-                    
-Waiting time : Time Difference between turn around time and burst time.  
-
 #Algorithm
 
 step 1 : create an array process[] and burst_time[]
-step 2 : create an array burst_remaining_time[] . initially burst_reamaining_time[] = burst_time[]
+step 2 : create an array burst_remaining_time[] . Initially burst_reamaining_time[] = burst_time[]
 step 3 : Initially t = 0 and array waiting_time[] = {0}
 step 4 : keep traversing utill all process should be completed
          step 4.1 : IF burst_remaining_time[] > quntum then 
