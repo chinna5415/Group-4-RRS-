@@ -1,2 +1,2 @@
-The time complexity of round-robin scheduling algorithms is O(1). 
+The time complexity of round-robin scheduling algorithm is O(1). 
 It is easy to realize and is suitable to use in high-speed networks
