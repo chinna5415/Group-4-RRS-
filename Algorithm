@@ -1,9 +1,10 @@
 #Algorithm
 
 step 1 : create an array process[] and burst_time[]
-step 2 : create an array burst_remaining_time[]  #Initially burst_remaining_time[] = burst_time[]
-step 3 : Initially t = 0 and array waiting_time[] = {0}
-step 4 : keep traversing until all process should be completed
+step 2 : generate burst_time and arrival time randomly
+step 3 : create an array burst_remaining_time[]  #Initially burst_remaining_time[] = burst_time[]
+step 4 : Initially t = 0 and create an array for waiting_time[]
+step 5 : keep traversing until all process should be completed
          step 4.1 : IF burst_remaining_time[] > quntum then 
                         t = t + quntum
                         burst_remaining_time[] = burst_remaining_time - quntum
@@ -12,7 +13,24 @@ step 4 : keep traversing until all process should be completed
                       waiting_time[] = t - burst_time[]
                       burst_remaining_time[] = 0
                       
-                   
+#Pseudocode
+
+----> generate Arrival time and Burst time randomly
+
+Assume done = true
+for i -> 0 to n do
+    if arrival_time[i] <= t then :
+       if rem_bursttime[i] > 0 :
+           done = false
+           if rem_bursttime[i] > quantum then :
+                          t += quantum
+                          rem_bursttime[i] -= quantum
+           else then :
+                     t = t + rem_bursttime[i]
+                     wt[i] = t - burst_time[i]
+                     rem_bursttime[i] = 0
+      else :
+           continue 
 
 Example :-
 
