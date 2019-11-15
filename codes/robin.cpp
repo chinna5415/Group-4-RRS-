@@ -96,17 +96,19 @@ void Robin :: waitingtime(int quantum , int burst_time[] , int process[] , int w
      while (1) {
            bool done = true;
            for (int i = 0 ; i < n; i++) {
-               if (rem_bursttime[i] > 0) {
-                   done = false;
-                   if (rem_bursttime[i] > quantum) {
-                      t += quantum;
-                      rem_bursttime[i] -= quantum;
-                   }  else {
-                             t = t + rem_bursttime[i];
-                             wt[i] = t - burst_time[i];
-                             rem_bursttime[i] = 0;
-                   }
-               }
+               if (arrival_time[i] <= t) {
+                  if (rem_bursttime[i] > 0) {
+                      done = false;
+                      if (rem_bursttime[i] > quantum) {
+                          t += quantum;
+                          rem_bursttime[i] -= quantum;
+                       }  else {
+                                  t = t + rem_bursttime[i];
+                                  wt[i] = t - burst_time[i];
+                                 rem_bursttime[i] = 0;
+                       }
+                  }
+               } else { continue ;}
             }
 
         if (done == true)
