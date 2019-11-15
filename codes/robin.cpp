@@ -25,15 +25,67 @@ class Robin {
 };
 
 void Robin :: get_data() {
-     int random;
-     cout << "enter the quantum : "; // assign the CPU time
-     cin >> quantum;
-
-     for (int i = 0 ; i < n ; i++) {
-        process[i] = i;
-        random = rand() % 55; // rand() it produce random numbers up to 55
-        burst_time[i] = random;
+     int random ;
+     char choose_quantum , choose_burst_time , choose_arrival_time;
+     cout << "\nDo you want to choose the time quantum(--> y), or choose randomly? (--> n)";
+     cin >> choose_quantum;
+     while (true) {
+        if (choose_quantum == 'y') {
+            cout << "\nEnter the time quantum: ";
+            cin >> quantum;
+            break;
+        }
+        if (choose_quantum == 'n') {
+            quantum = rand() % 5;
+            break;
+        } else {
+            cout << "you have to choose [y/n]";
+            cin >> choose_quantum;}
      }
+
+     cout << "\nDo you want to choose the arrival time (--> y) , or choose randomly? (--> n)\n ";
+     cin >>choose_arrival_time;
+     while (true) {
+        if (choose_arrival_time == 'y') {
+            arrival_time[0] = 0;
+            for (int i = 1 ; i < n ; i++) {
+                cout << "Enter the arrival time of " << char(65+i) << " : ";
+                cin >> arrival_time[i];
+            }
+            break;
+        }
+        if (choose_arrival_time == 'n') {
+            for (int i = 0 ; i < n ; i++) {
+                random = rand() % 10;
+                arrival_time[i] = random;
+            }
+            break;
+        } else {
+            cout << 'you have to choose [y/n]';
+            cin >> choose_arrival_time; }
+     }
+     cout << "\nDo you want to choose the burst time(---> 'y'), or should it be chosen randomly?(--> n)\n";
+     cin >> choose_burst_time;
+     while (true) {
+        if (choose_burst_time == 'y') {
+            for (int i = 0 ; i < n ; i++) {
+                cout << "enter the process " << char(65+i) << "Burst time : ";
+                cin >> burst_time[i];
+            }
+            break;
+        }
+        if (choose_burst_time == 'n') {
+            for (int i = 0 ; i < n ; i++) {
+                random = rand() % 55;
+                burst_time[i] = random;
+            }
+            break;
+        } else {
+            cout << 'you have to choose [y/n]';
+            cin >> choose_arrival_time;}
+     }
+
+     cout << "\nTime quantum : " << quantum << "\n\n";
 }
 
 void Robin :: waitingtime(int quantum , int burst_time[] , int process[] , int wt[]) {
