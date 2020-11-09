@@ -70,22 +70,28 @@ if __name__ == '__main__':
     Run()
 
     
-    
-def check_bust_time(temp_bust_time):
-    if temp_bust_time.count(0) == 5:
+def check_temp_bust_time(temp_bust_time, length):
+    if temp_bust_time.count(0) == length:
         return 0
     return 1
 
-def check_ready_queue(ready_queue, process_name):
-    if process_name in ready_queue:
+def check_gant_chart(gant_chart, process_name):
+    if process_name in gant_chart:
         return 0
     return 1
 
-def add_process_ready_queue(time, arival_time, process, ready_queue, temp_bust_time, p_process):
-    for i in range(len(process)):
-        if all([arival_time[i] <= time, temp_bust_time[i] != 0, process[i] != p_process]):
-            if check_ready_queue(ready_queue, process[i]):
-                ready_queue.append(process[i])
+def getProcess(ready_queue, time, process, arival_time, temp_bust_time):
+    min_bust_time = 999
+    idx = ''
+    for i in ready_queue:
+        if min_bust_time > temp_bust_time[process.index(i)]:
+            min_bust_time, idx = temp_bust_time[process.index(i)], i
+
+    time += min_bust_time
+    ele = idx
+    ready_queue.remove(idx)
+    temp_bust_time[process.index(idx)] = 0
+    return ele, time
 
 process = []
 arival_time = []
@@ -99,46 +105,35 @@ with open('data.txt','r') as file:
         bust_time.append(int(line[2]))
 
 ready_queue = []
-temp_queue = []
+gant_chart = []
 complete_time = {i:0 for i in process}
 temp_bust_time = []+bust_time
 time = 0
-quntum = 4
 
-while check_bust_time(temp_bust_time):
+while check_temp_bust_time(temp_bust_time, len(process)):
     for i in range(len(process)):
-        if arival_time[i] <= time and check_ready_queue(ready_queue, process[i]) and temp_bust_time[i] != 0:
+        if arival_time[i] <= time and check_gant_chart(gant_chart, process[i]):
             ready_queue.append(process[i])
-        
-        if ready_queue != []:
-            for i in ready_queue:
-                idx = process.index(i)
+            
+    while ready_queue != []:
+        ele, time = getProcess(ready_queue, time, process, arival_time, temp_bust_time)
+        gant_chart.append(ele)
+        complete_time[ele] = time
 
-                if temp_bust_time[idx] <= quntum and temp_bust_time[idx] != 0:
-                    time += temp_bust_time[idx]
-                    temp_bust_time[idx] = 0
-                    complete_time[process[idx]] = time
-                    add_process_ready_queue(time, arival_time, process, ready_queue, temp_bust_time, process[idx])
-
-                elif temp_bust_time[idx] > quntum:
-                    time += (temp_bust_time[idx] - (temp_bust_time[idx] - quntum))
-                    temp_bust_time[idx] -= quntum
-                    add_process_ready_queue(time, arival_time, process, ready_queue, temp_bust_time, process[idx])
-                    ready_queue.append(process[idx])
-                    
-        
 turn_around_time = []
 sum_tat = 0
 sum_wt = 0
 i = 0
 
-for key,value in complete_time.items():
-    turn_around_time.append((value-arival_time[i]))
+for key, value in complete_time.items():
+    turn_around_time.append((value - arival_time[i]))
     sum_tat += turn_around_time[-1]
     sum_wt += (turn_around_time[-1] - bust_time[i])
     i += 1
 
 print('Order of execution')
-print(*ready_queue)
-print("Average trun around time : %.2f"%(sum_tat/5))
-print("Average waiting time : %.2f"%(sum_wt/5))
+print(*gant_chart)
+length = len(process)
+
+print('Avarage Turn around time : %.2f'%(sum_tat/length))
+print('Avarage waiting time : %.2f'%(sum_wt/length))
