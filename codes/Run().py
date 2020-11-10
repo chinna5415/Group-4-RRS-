@@ -70,3 +70,84 @@ if __name__ == '__main__':
     Run()
 
     
+
+    def check_bust_time(temp_bust_time, n):
+    if temp_bust_time.count(0) == n:
+        return 0
+    return  1
+
+def check_ready_queue(ready_queue, process_name):
+    if process_name in ready_queue:
+        return 0
+    return  1
+
+def getMinBust(ready_queue, time, process, temp_bust_time, arival_time):
+    Min = 999
+    idx = ''
+    for i in ready_queue:
+        if temp_bust_time[process.index(i)] < Min and temp_bust_time[process.index(i)] != 0:
+            Min , idx = temp_bust_time[process.index(i)], i
+
+    temp_bust_time[process.index(idx)] -= 1
+    
+    if temp_bust_time[process.index(idx)] == 0:
+        time += 1
+        ready_queue.remove(idx)
+        return idx, time, 1
+    else:
+        time += 1
+        return idx, time, 0
+
+process = []
+arival_time = []
+bust_time = []
+
+with open('data.txt','r') as file:
+    for line in file:
+        line = line.split(',')
+        process.append(line[0])
+        arival_time.append(int(line[1]))
+        bust_time.append(int(line[2]))
+
+ready_queue = []
+gant_chart = []
+complete_time = {i:0 for i in process}
+temp_bust_time = []+bust_time
+time = 0
+length = len(process)
+
+while check_bust_time(temp_bust_time, length):
+    for i in range(length):
+        if (arival_time[i] <= time and check_ready_queue(ready_queue, process[i])):
+            ready_queue.append(process[i])
+
+    if ready_queue != []:
+        min_, time, flag = getMinBust(ready_queue, time, process, temp_bust_time, arival_time)
+
+        if flag:
+            complete_time[min_] = time
+            gant_chart.append(min_)
+        else:
+            gant_chart.append(min_)
+
+temp_gant_chart = [gant_chart[0]]
+
+for i in range(1,len(gant_chart)):
+    if gant_chart[i] != temp_gant_chart[-1]:
+        temp_gant_chart.append(gant_chart[i])
+
+print('order of exection')
+print(*temp_gant_chart)
+
+turn_around_time = []
+sum_wt = 0
+i = 0
+
+for key, value in complete_time.items():
+    turn_around_time.append((value - arival_time[i]))
+    sum_wt += (turn_around_time[-1] - bust_time[i])
+    i += 1
+
+print('Avarage turn around time : %.2f'%(sum(turn_around_time)/length))
+print('Avarage waiting time : %.2f'%(sum_wt/length))
+    
