@@ -70,8 +70,7 @@ if __name__ == '__main__':
     Run()
 
     
-
-    def check_bust_time(temp_bust_time, n):
+def check_bust_time(temp_bust_time, n):
     if temp_bust_time.count(0) == n:
         return 0
     return  1
