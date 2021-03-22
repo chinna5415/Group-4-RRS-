@@ -137,3 +137,137 @@ int main() {
 
     cout << "\ntime : " << (end_ - start);
 }
+
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class SensorData {
+/*
+    This class stores the data about the sensors.
+    It also has methods to raise or stop the fire alam.
+*/
+public:
+    int SensorId;      // Stores the ID of the sensor.
+    int TrackNumber, SectorNumber;   // Stores the coordinates of the sensor.
+    bool fire_alarm;        // Flag variable. Set to 'true' when fire is detected.
+    
+    void set_Data(int , int , int);     // Assigns the data to the sensor.
+    void Flag();        // Raises the alarm.
+    void unFlag();      // Stops the alarm.
+};
+
+void SensorData::set_Data(int id, int t, int s) {
+    this -> SensorId = id;
+    this -> TrackNumber = t;
+    this -> SectorNumber = s;
+}
+
+void SensorData::Flag() {
+    this -> fire_alarm = true;
+}
+
+void SensorData::unFlag() {
+    this -> fire_alarm = false;
+}
+
+static int Tracks, Sectors, SensorPerCell, SensorCount = 0;
+
+void PlaceSensors(SensorData* ptr);
+void ShowDatabase(SensorData* ptr);
+void LocateSensor(SensorData* ptr);
+
+int main() {
+    char check;
+
+    cout << "\nEnter the number of tracks in the field: ";
+    cin >> Tracks;      // Input the number of tracks.
+    
+    cout << "Enter the number of sectors in the field: ";
+    cin >> Sectors;     // Input the number of sectors.
+    
+    cout << "Enter the number of sensors per cell: ";
+    cin >> SensorPerCell;     // Input the number of sensors per cell.
+    
+    // Create an array of objects of class SensorData.
+    // Each object corresponds to a sensor placed in the field.
+    // Total number of sensors in the field = tracks * sectors * sensor_per_cell
+    SensorData sensor[Tracks * Sectors * SensorPerCell];
+    SensorData* ptr = sensor;   // A pointer to reference the objects from differnet functions.
+    
+    PlaceSensors(ptr);  // Call the function to place the sensors in the field.
+    
+    cout << "\n\n--Press '1' to check for fire\n\t'2' to view database\n\t'0' to exit\n";
+    
+    // Based on the choice of the user, check for fire or exit.
+    while(1) {
+        cin >> check;
+
+        if (check == '1') {
+            // Randomly decide whether to raise the fire alarm or not.
+            srand(time(NULL));
+            int fire = rand() % 2;
+            
+            if (fire == 1) {
+                // If decided to raise the fire alarm, randomly select
+                // a sensor and set the flag to 1.
+                srand((unsigned) time(0));
+                sensor[(rand() % sensor_count) + 1].Flag();
+    
+                // Call the function to check which sensor has raised the alarm.
+                LocateSensor(ptr);
+            }
+            else cout << "\t--- No Fire detected ---\n";
+        }
+        else if(check == '2') ShowDatabase(ptr); // Function to view the database.
+        
+        else if (check == '0') break;
+    }
+    return 0;
+}
+
+void PlaceSensors(SensorData* ptr) {
+    /* This function will use the inputs from user to determine the
+       field dimensions and place the sensors in the field, simultaneously
+       adding the data to the database (objects)
+    */
+    for (int i=1; i<=Tracks; i++)
+        for (int j=1; j<=Sectors; j++)
+            for (int k=1; k<=SensorPerCell; k++) {
+                ptr[SensorCount].set_Data(sensor_count+1, i, j);
+                ptr[SensorCount].unFlag();
+            
+                SensorCount++;
+            }
+    cout << "\n" << SensorCount << " sensors are placed in the field.";
+    
+    ShowDatabase(ptr);
+}
+
+void LocateSensor(SensorData* ptr) {
+    /* This function will locate the sensor which
+       raised the fire alarm. After retrieving the sensor data,
+       it will output the details. Then, it will stop the alarm.
+    */
+    for (int k=0; k<SensorCount; k++)
+        if (ptr[k].fire_alarm) {
+            cout << "\t--- FIRE ---\n\t Sensor ID : " << ptr[k].SensorId << "\n\t Track Number : " << ptr[k].TrackNumber << "\n\t Sector Number : " << ptr[k].SectorNumber << "\n\n";
+        
+            ptr[k].unFlag();
+    }
+}
+
+void ShowDatabase(SensorData* ptr) {
+    /* This function will display the complete
+       data available about the sensors
+    */
+    cout << "\n  Sensor ID\tTrack Number\tSector Number";
+    cout << "\n ---------------------------------------------";
+
+    for(int k=0; k<SensorCount; k++)
+        cout << "\n\t" << ptr[k].SensorId << "\t\t" << ptr[k].TrackNumber << "\t\t " << ptr[k].SectorNumber;
+    cout << "\n ---------------------------------------------\n";
+}
