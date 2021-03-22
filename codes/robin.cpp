@@ -1,5 +1,6 @@
 using namespace std;
 #include <iostream>
+#include <bits/stdc++>
 #include <cstdlib>
 #include <ctime>
 int n; // Global value n
